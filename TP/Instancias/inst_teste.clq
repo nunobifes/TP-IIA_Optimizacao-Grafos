@@ -1,0 +1,27 @@
+c Instancia de teste para problema 2
+c IIA 2015 16
+p edge 7 24
+e 1 2
+e 1 3
+e 1 5
+e 1 6
+e 2 1
+e 2 3
+e 2 4
+e 2 6
+e 3 1
+e 3 2
+e 3 4
+e 3 5
+e 4 2
+e 4 3
+e 4 7
+e 5 1
+e 5 3
+e 5 7
+e 6 1
+e 6 2
+e 6 7
+e 7 4
+e 7 5
+e 7 6

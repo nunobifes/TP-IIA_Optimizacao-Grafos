@@ -24,12 +24,27 @@
     <ClCompile Include="Grafo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TrepaColinas.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Independent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Funcoes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Grafo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Algoritmo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TrepaColinas.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Independent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
