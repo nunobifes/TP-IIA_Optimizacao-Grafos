@@ -2,18 +2,9 @@
 
 
 
-Funcoes::Funcoes()
-{
-}
-
-
-Funcoes::~Funcoes()
-{
-}
-
 void Funcoes::le_dados(string nome, int* vert, vector< vector<int> >* mat, int *edges)
 {
-	string caminho = "Instancias\\brock200_1.clq";// +nome;
+	string caminho = "Instancias\\" + nome + ".clq";
 	string linha;
 	vector< vector<int> > matb;
 	string val, lixo, lixo2, v, e;
@@ -51,4 +42,19 @@ void Funcoes::le_dados(string nome, int* vert, vector< vector<int> >* mat, int *
 		matb[atoi(i.c_str())-1][atoi(j.c_str())-1] = 1;
 	}
 	*mat = matb;
+}
+
+void Funcoes::init_rand()
+{
+	srand((unsigned)time(NULL));
+}
+
+int Funcoes::random_l_h(int min, int max)
+{
+	return min + rand() % (max - min + 1);
+}
+
+float Funcoes::rand_01()
+{
+	return ((float)rand()) / RAND_MAX;
 }
