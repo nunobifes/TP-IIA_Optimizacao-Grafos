@@ -23,6 +23,7 @@ void Funcoes::le_dados(string nome, int* vert, vector< vector<int> >* mat, int *
 	n >> e;
 	*vert = atoi(v.c_str());
 	*edges = atoi(e.c_str());
+
 	for (auto i = 0; i < *vert; i++)
 	{
 		vector<int>novo;
@@ -40,13 +41,27 @@ void Funcoes::le_dados(string nome, int* vert, vector< vector<int> >* mat, int *
 		n >> i;
 		n >> j;
 		matb[atoi(i.c_str())-1][atoi(j.c_str())-1] = 1;
+		matb[atoi(j.c_str()) - 1][atoi(i.c_str()) - 1] = 1;
+
+		
 	}
+	
 	*mat = matb;
 }
 
 void Funcoes::init_rand()
 {
 	srand((unsigned)time(NULL));
+}
+
+int Funcoes::bynarit()
+{
+	int n = rand() % 2;
+
+	if (n == 1)
+		return 1;
+	else
+		return 0;
 }
 
 int Funcoes::random_l_h(int min, int max)
@@ -57,4 +72,10 @@ int Funcoes::random_l_h(int min, int max)
 float Funcoes::rand_01()
 {
 	return ((float)rand()) / RAND_MAX;
+}
+
+void Funcoes::inicializector(vector<int> *v, int vert)
+{
+	for (int i = 0; i < vert; i++)
+		v->push_back(0);
 }
