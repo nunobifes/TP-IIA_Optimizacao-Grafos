@@ -156,11 +156,13 @@
     <ClCompile Include="Grafo.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="TrepaColinas.cpp" />
+    <ClCompile Include="TrepaColinasV2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Funcoes.h" />
     <ClInclude Include="Grafo.h" />
     <ClInclude Include="TrepaColinas.h" />
+    <ClInclude Include="TrepaColinasV2.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
