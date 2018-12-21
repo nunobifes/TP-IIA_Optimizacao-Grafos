@@ -15,6 +15,7 @@ class Grafo
 public:
 	Grafo(vector<vector<int>> m, int v, int a);
 	int get_arestas() const;
+	int get_verts() const;
 	vector< vector<int> > get_matriz() const;
 	~Grafo();
 };
