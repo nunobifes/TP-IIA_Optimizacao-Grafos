@@ -102,26 +102,6 @@ void TrepaColinas::gera_vizinho(vector<int> *sol1, vector<int> *sol2, int n)
 	
 }
 
-void TrepaColinas::gera_vizinho2(vector<int> *sol1, vector<int> *sol2, int n)
-{
-	int p1, p2;
-
-
-		for (int i = 0; i < n; ++i)
-			sol2->at(i) = sol1->at(i);
-
-
-	p1 = Funcoes::random_l_h(0, n - 1);
-
-	sol2->at(p1) = !sol2->at(p1);
-
-	do
-		p2 = Funcoes::random_l_h(0, n - 1);
-	while (p2 == p1);
-
-	sol2->at(p2) = !sol2->at(p2);
-
-}
 
 
 
