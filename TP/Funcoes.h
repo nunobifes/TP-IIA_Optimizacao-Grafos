@@ -7,6 +7,9 @@
 #include <fstream>
 #include <ctime>
 using namespace std;
+#define MAX_OBJ 1000
+#define DEFAULT_RUNS 10
+
 class Funcoes
 {
 public:

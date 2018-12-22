@@ -122,7 +122,7 @@ void TrepaColinas::run()
 			substitui(&best, &sol, vert);
 		}
 	}
-	cout << "\n\nMBF: " << setprecision(3) << mbf / k << endl;
+	cout << "\n\nMBF: " << fixed << setprecision(5) << mbf / k << endl;
 	cout << "\nConjunto Maximo de Vertices Independentes: ";
 	escreve_sol(best, vert);
 	cout << "Custo final: " << best_custo << endl;
