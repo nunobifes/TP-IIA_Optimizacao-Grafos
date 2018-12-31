@@ -9,7 +9,7 @@ public:
 
 	}
 
-	int p[MAX_OBJ];
+	vector<int> p;
 	float fitness;
 	int valido;
 };
