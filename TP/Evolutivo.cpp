@@ -1,7 +1,8 @@
 #include "Evolutivo.h"
+#include "CSVFile.h"
 
 
-#define DEFAULT_RUNS 10
+
 
 
 int Evolutivo::flip()
@@ -14,78 +15,108 @@ int Evolutivo::flip()
 
 
 
-Evolutivo::Evolutivo(const Grafo& grafo): grafo(grafo)
+Evolutivo::Evolutivo(Grafo* grafo, float pr, float pm, int ger, int popSize, int iter, string outputfile): grafo(grafo), iter(iter), outputFile(outputfile)
 {
-	mbf = 0.0;
-	pop = nullptr;
-	parents = nullptr;
-	EA_param.ro = 0;
-	EA_param.popsize = 100;
-	EA_param.pm = 0.001f;
-	EA_param.pr = 0.7f;
-	EA_param.capacity = grafo.get_arestas();
+	mbf = 0.0f;
+	
+	EA_param.popsize = popSize;
+	EA_param.pm = pm;
+	EA_param.pr = pr;
+	EA_param.capacity = grafo->get_arestas();
 	EA_param.tsize = 2;
-	EA_param.numGenerations = 2500;
-	EA_param.numGenes = grafo.get_verts();
+	EA_param.numGenerations = ger;
+	EA_param.numGenes = grafo->get_verts();
+	
 }
 
-Individual* Evolutivo::init_pop(Info d)
+vector<Individual*> Evolutivo::init_vector(Info d)
 {
-	Individual *indiv = new Individual[d.popsize];
-
+	vector<Individual*> indiv;
+	
 	for (int i = 0; i < d.popsize; i++)
 	{
-		for (int j = 0; j < d.numGenes; j++)
-			indiv[i].p[j] = flip();
+		Individual * ind = new Individual;
+		for (int j = 0; j < d.numGenes; j++) {
+			ind->p.push_back(0);
+			ind->fitness = 0;
+			ind->valido = 0;
+		}
+
+		indiv.push_back(ind);
 	}
 	return indiv;
 }
 
-float Evolutivo::eval_individual(int is[], const Info & info, const vector<vector<int>>& ises, int * valido)
+vector<Individual*> Evolutivo::init_pop(Info d)
 {
-	float sum_weight, sum_profit;
+	vector<Individual*> indiv;
+	
+	for (int i = 0; i < d.popsize; i++)
+	{
+		Individual * ind = new Individual;
+		for (int j = 0; j < d.numGenes; j++){
+			ind->p.push_back(flip());
+			ind->fitness = 0;
+			ind->valido = 0;
+		}
 
-	sum_profit = sum_weight = 0.0;
+		indiv.push_back(ind);
+	}
+	return indiv;
+}
+
+float Evolutivo::eval_individual(vector<int> is, const Info & info, const vector<vector<int>>& ises, int * valido)
+{
+	int tot = 0;
+	int zer = 0;
 
 	for(int i = 0; i < info.numGenes; i++)
 	{
-		if(is[i] == 1)
+		if(is[i] == 0)
 		{
-			sum_weight += ises[i][0];
-			sum_profit += ises[i][1];
+			for (int j = 0; j < info.numGenes; j++)
+			{
+				if (is[j] == 0 && ises[i][j] == 1)
+					tot++;
+			}
 		}
 	}
-	if(sum_weight > info.capacity)
+	if(tot == 0)
 	{
-		*valido = 0;
-		return 0;
+		for (int i = 0; i < info.numGenes; i++)
+		{
+			if (is[i] == 0)
+				zer++;
+		}
+		*valido = 1;
+		return zer;
 	}
 	else
 	{
-		*valido = 1;
-		return sum_profit;
+		*valido = 0;
+		return -tot;
 	}
 
 }
 
-void Evolutivo::evaluate(Individual* pop, const Info& info, const vector<vector<int>>& ises)
+void Evolutivo::evaluate(vector<Individual*> pop, const Info& info, const vector<vector<int>>& ises)
 {
 	for (int i = 0; i < info.popsize; i++)
 	{
-		pop[i].fitness = eval_individual(pop[i].p, info, ises, &pop[i].valido);
+		pop[i]->fitness = eval_individual(pop[i]->p, info, ises, &pop[i]->valido);
 	}
 }
 
-Individual& Evolutivo::get_best(Individual* pop, const Info& info,  Individual& individual)
+Individual &Evolutivo::get_best(vector<Individual*> pop, const Info& info,  Individual &individual)
 {
 	for (int i = 0; i < info.popsize; i++)
-		if (individual.fitness < pop[i].fitness)
-			individual = pop[i];
+		if (individual.fitness < pop[i]->fitness)
+			individual = *pop[i];
 	
 	return individual;
 }
 
-void Evolutivo::tournament(Individual* pop, const Info& info, Individual* parents)
+void Evolutivo::tournament(vector<Individual*> pop, const Info& info, vector<Individual*> parents)
 {
 	int x1, x2;
 	for(int i = 0; i < info.popsize; i++)
@@ -94,14 +125,14 @@ void Evolutivo::tournament(Individual* pop, const Info& info, Individual* parent
 		do
 			x2 = Funcoes::random_l_h(0, info.popsize - 1);
 		while (x1 == x2);
-		if (pop[x1].fitness > pop[x2].fitness)
+		if (pop[x1]->fitness > pop[x2]->fitness)
 			parents[i] = pop[x1];
 		else
 			parents[i] = pop[x2];
 	}
 }
 
-void Evolutivo::tournament_geral(Individual* pop, const Info& info, Individual* parents)
+void Evolutivo::tournament_geral(vector<Individual*> pop, const Info& info, vector<Individual*> parents)
 {
 	int *pos = new int;
 	int sair, best, i, j, k;
@@ -119,15 +150,15 @@ void Evolutivo::tournament_geral(Individual* pop, const Info& info, Individual* 
 						sair = 1;
 			}
 			while (sair);
-			if (j == 0 || pop[pos[j]].fitness > pop[pos[best]].fitness)
+			if (j == 0 || pop[pos[j]]->fitness > pop[pos[best]]->fitness)
 				best = j;
 		}
 		parents[i] = pop[pos[best]];
 	}
-	delete pos;
+	//delete pos;
 }
 
-void Evolutivo::crossover(Individual* parents, const Info& info, Individual* pop)
+void Evolutivo::crossover(vector<Individual*> parents, const Info& info, vector<Individual*> pop)
 {
 	int i, j, point;
 
@@ -138,13 +169,13 @@ void Evolutivo::crossover(Individual* parents, const Info& info, Individual* pop
 			point = Funcoes::random_l_h(0, info.numGenes - 1);
 			for (j = 0; j < point; j++)
 			{
-				pop[i].p[j] = parents[i].p[j];
-				pop[i+1].p[j] = parents[i+1].p[j];
+				pop[i]->p[j] = parents[i]->p[j];
+				pop[i+1]->p[j] = parents[i+1]->p[j];
 			}
 			for (j = point; j < info.numGenes; j++)
 			{
-				pop[i].p[j] = parents[i+1].p[j];
-				pop[i + 1].p[j] = parents[i].p[j];
+				pop[i]->p[j] = parents[i+1]->p[j];
+				pop[i + 1]->p[j] = parents[i]->p[j];
 			}
 		}
 		else
@@ -155,15 +186,16 @@ void Evolutivo::crossover(Individual* parents, const Info& info, Individual* pop
 	}
 }
 
-void Evolutivo::mutation(Individual* pop, const Info& info)
+void Evolutivo::mutation(vector<Individual*> pop, const Info& info)
 {
 	int i, j;
 	for (i = 0; i < info.popsize; i++)
 		for (j = 0; j < info.numGenes; j++)
-			pop[i].p[j] = !(pop[i].p[j]);
+			if(Funcoes::rand_01() < info.pm)
+				pop[i]->p[j] = !(pop[i]->p[j]);
 }
 
-void Evolutivo::genetic_operators(Individual* parents, const Info& info, Individual* pop)
+void Evolutivo::genetic_operators(vector<Individual*> parents, const Info& info, vector<Individual*> pop)
 {
 	crossover(parents, info, pop);
 	mutation(pop, info);
@@ -182,42 +214,70 @@ void Evolutivo::write_best(const Individual& individual, const Info& info)
 
 void Evolutivo::Run()
 {
-	int k;
-	for(k = 0; k < DEFAULT_RUNS; k++)
+	time_t start, end;
+	time(&start);
+	int k, kk, invv;
+
+	CSVFile *csvFile = new CSVFile();
+	csvFile->Write(0, 0, outputFile);
+	csvFile->addCabecalhoE();
+	for(k = 0; k < iter; k++)
 	{
 		//cout << "Repeticao: " << k << endl;
 		pop = init_pop(EA_param);
-		evaluate(pop, EA_param, grafo.get_matriz());
-		best_run = pop[0];
+		evaluate(pop, EA_param, grafo->get_matriz());
+		best_run = *pop[0];
 		best_run = get_best(pop, EA_param, best_run);
-		parents = new Individual[EA_param.popsize];
+		parents = init_vector(EA_param);
 
 		int gen_actual = 1;
 		while(gen_actual <= EA_param.numGenerations)
 		{
-			tournament(pop, EA_param, parents);
+			tournament_geral(pop, EA_param, parents);
 			genetic_operators(parents, EA_param, pop);
-			evaluate(pop, EA_param, grafo.get_matriz());
+			evaluate(pop, EA_param, grafo->get_matriz());
 			best_run = get_best(pop, EA_param, best_run);
 			gen_actual++;
 		}
 		int inv = 0;
 		for (int i = 0; i < EA_param.popsize; i++)
-			if (pop[i].valido == 0)
+			if (pop[i]->valido == 0)
 				inv++;
 
-		cout << endl <<"Repeticao: " << k << endl;
-		write_best(best_run, EA_param);
-		cout << "Percentagem Invalidos: " << 100*static_cast<float>(inv/EA_param.popsize) << endl;
+		//cout << endl <<"Repeticao: " << k << endl;
+		//write_best(best_run, EA_param);
+		//cout << "Percentagem Invalidos: " << 100*(inv/EA_param.popsize) << endl;
 		mbf += best_run.fitness;
 		if (k == 0 || best_run.fitness > best_ever.fitness)
+		{
 			best_ever = best_run;
-		delete parents;
-		delete pop;
+			kk = k;
+			invv = inv;
+		}
+			
+		csvFile->addHipoteseE(k, (mbf/k), (100 * (inv / EA_param.popsize)),best_run, EA_param);
+		
+		for (Individual* element : parents)
+			delete element;
+		for(auto i = 0; i < parents.size(); i++)
+			parents.erase(parents.begin() + i);
+		
+
+		for(Individual* element : pop)
+			delete element;
+		for (auto i = 0; i < pop.size(); i++)
+			pop.erase(pop.begin() + i);
+
+		
 	}
-	cout << endl << endl << "MBF: " << mbf / k << endl;
-	cout << endl << "Melhor Solucao encontrada: " << endl;
-	write_best(best_ever, EA_param);
+	//cout << endl << endl << "MBF: " << mbf / k << endl;
+	//cout << endl << "Melhor Solucao encontrada: " << endl;
+	//write_best(best_ever, EA_param);
+	csvFile->addBestE(kk, (mbf / k), (100 * (invv / EA_param.popsize)), best_ever, EA_param);
+	csvFile->toFile(outputFile);
+	time(&end);
+
+	cout << "Terminado - " << outputFile << ": " << difftime(end, start) << " segundos" << endl;
 }
 
 Evolutivo::~Evolutivo()

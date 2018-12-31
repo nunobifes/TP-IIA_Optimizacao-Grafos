@@ -1,7 +1,8 @@
 ﻿#include "TrepaColinas.h"
+#include "CSVFile.h"
 
 
-TrepaColinas::TrepaColinas(const Grafo& grafo, int iter): grafo(grafo), vert(grafo.get_verts()), n_iter(iter)
+TrepaColinas::TrepaColinas(Grafo* grafo, int iter, int testes, string outputFile): grafo(grafo), vert(grafo->get_verts()), n_iter(iter), testes(testes), outputFile(outputFile)
 {
 	custo = 0;
 	mbf = 0.0;
@@ -36,18 +37,18 @@ void TrepaColinas::substitui(vector<int> *sol1, vector<int> *sol2, int vert)
 			sol1->at(i) = sol2->at(i);
 }
 
-int TrepaColinas::trepa_colinas(vector<int> *sol, Grafo g, int vert, int num_iter)
+int TrepaColinas::trepa_colinas(vector<int> *sol, Grafo *g, int vert, int num_iter)
 {
 	vector<int> nova_sol;
 	Funcoes::inicializector(&nova_sol, vert);
 	int custo, custo_viz;
 
-	custo = calcula_fit(*sol, g.get_matriz(), vert);
+	custo = calcula_fit(*sol, g->get_matriz(), vert);
 	for (auto i = 0; i < num_iter; i++)
 	{
 		gera_vizinho(sol, &nova_sol, vert);
 		//gera_vizinho2(sol, &nova_sol, vert);
-		custo_viz = calcula_fit(nova_sol, g.get_matriz(), vert);
+		custo_viz = calcula_fit(nova_sol, g->get_matriz(), vert);
 		if(custo_viz > custo)
 		{
 			substitui(sol, &nova_sol, vert);
@@ -107,24 +108,35 @@ void TrepaColinas::gera_vizinho(vector<int> *sol1, vector<int> *sol2, int n)
 
 void TrepaColinas::run()
 {
-	int k;
-	for(k = 0; k < 20; k++){
+	time_t start, end;
+	time(&start);
+	int k, kk;
+	CSVFile *csvFile = new CSVFile();
+	csvFile->Write(0, 0, "Trepa-Colinas");
+	csvFile->addCabecalhoTC();
+	for(k = 0; k < testes; k++){
 		sol = gera_sol_inicial();
-		escreve_sol(sol, vert);
+		//escreve_sol(sol, vert);
 		custo = trepa_colinas(&sol, grafo, vert, n_iter);
-		cout << "\nRepeticao: " << k;
-		escreve_sol(sol, vert);
-		cout << "Custo Final " << custo << endl;
+		//cout << "\nRepeticao: " << k;
+		//escreve_sol(sol, vert);
+		//cout << "Custo Final " << custo << endl;
 		mbf += custo;
+		csvFile->addHipoteseTC(sol, custo, mbf, k);
 		if(k == 0 || best_custo < custo)
 		{
 			best_custo = custo;
+			kk = k;
 			substitui(&best, &sol, vert);
 		}
 	}
-	cout << "\n\nMBF: " << fixed << setprecision(5) << mbf / k << endl;
-	cout << "\nConjunto Maximo de Vertices Independentes: ";
-	escreve_sol(best, vert);
-	cout << "Custo final: " << best_custo << endl;
-
+	//cout << "\n\nMBF: " << fixed << setprecision(5) << mbf / k << endl;
+	//cout << "\nConjunto Maximo de Vertices Independentes: ";
+	//escreve_sol(best, vert);
+	//cout << "Custo final: " << best_custo << endl;
+	csvFile->addBestTC(best, best_custo, mbf, kk);
+	csvFile->toFile(outputFile);
+	time(&end);
+	
+	cout << "Terminado - " << outputFile << ": "<< difftime(end, start) << " segundos" << endl;
 }

@@ -2,7 +2,7 @@
 
 
 
-TrepaColinasV2::TrepaColinasV2(const Grafo& grafo, int iter): TrepaColinas(grafo, iter)
+TrepaColinasV2::TrepaColinasV2(Grafo* grafo, int iter, int testes, string outputFile): TrepaColinas(grafo, iter, testes, outputFile)
 {
 }
 
