@@ -152,17 +152,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CSVFile.cpp" />
     <ClCompile Include="Evolutivo.cpp" />
     <ClCompile Include="Funcoes.cpp" />
     <ClCompile Include="Grafo.cpp" />
+    <ClCompile Include="Hibrido.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="TrepaColinas.cpp" />
     <ClCompile Include="TrepaColinasV2.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CSVFile.h" />
     <ClInclude Include="Evolutivo.h" />
     <ClInclude Include="Funcoes.h" />
     <ClInclude Include="Grafo.h" />
+    <ClInclude Include="Hibrido.h" />
     <ClInclude Include="Individual.h" />
     <ClInclude Include="Info.h" />
     <ClInclude Include="TrepaColinas.h" />

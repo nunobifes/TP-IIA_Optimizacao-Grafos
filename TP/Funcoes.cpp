@@ -4,7 +4,7 @@
 
 void Funcoes::le_dados(string nome, int* vert, vector< vector<int> >* mat, int *edges)
 {
-	string caminho = "Instancias\\" + nome + ".clq";
+	string caminho = "Instancias\\" + nome;
 	string linha;
 	vector< vector<int> > matb;
 	string val, lixo, lixo2, v, e;
@@ -40,7 +40,7 @@ void Funcoes::le_dados(string nome, int* vert, vector< vector<int> >* mat, int *
 		n >> lixo;
 		n >> i;
 		n >> j;
-		matb[atoi(i.c_str())-1][atoi(j.c_str())-1] = 1;
+		matb[atoi(i.c_str()) - 1][atoi(j.c_str()) - 1] = 1;
 		matb[atoi(j.c_str()) - 1][atoi(i.c_str()) - 1] = 1;
 
 		
