@@ -1,0 +1,5 @@
+Instancia1 - johnson8-2-4
+Instancia2 - hamming6-4
+Instancia3 - johnson16-2-4
+Instancia4 - brock200_2
+Instancia5 - c-fat500-1
