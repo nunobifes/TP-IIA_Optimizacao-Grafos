@@ -71,7 +71,7 @@ int CSVFile::addBestTC(vector<int> sol, int custo, float mbf, int iter, int x)
 		}
 	}
 	Write(x++, lastLine, tmp);
-	Write(x++, lastLine, to_string(mbf / iter));
+	Write(x++, lastLine, to_string(mbf));
 	Write(x++, lastLine, to_string(custo));
 	Write(x++, lastLine, to_string(1));
 	return x;
@@ -88,7 +88,7 @@ int CSVFile::addCabecalhoE(int x)
 	Write(x++, lastLine, "Maximo Geracoes");
 	Write(x++, lastLine, "Solucao");
 	Write(x++, lastLine, "MBF");
-	Write(x++, lastLine, "Percentagem de Invalidos");
+	Write(x++, lastLine, "Fitness");
 	Write(x++, lastLine, "Melhor");
 	return x;
 }
@@ -110,7 +110,7 @@ int CSVFile::addHipoteseE(int iter, float mbf, float percInv, Individual run, In
 	}
 	Write(x++, lastLine, tmp);
 	Write(x++, lastLine, to_string(mbf));
-	Write(x++, lastLine, to_string(percInv));
+	Write(x++, lastLine, to_string(run.fitness));
 	Write(x++, lastLine, to_string(0));
 	return x;
 }
@@ -132,7 +132,7 @@ int CSVFile::addBestE(int iter, float mbf, float percInv, Individual run, Info i
 	}
 	Write(x++, lastLine, tmp);
 	Write(x++, lastLine, to_string(mbf));
-	Write(x++, lastLine, to_string(percInv));
+	Write(x++, lastLine, to_string(run.fitness));
 	Write(x++, lastLine, to_string(0));
 	return x;
 }

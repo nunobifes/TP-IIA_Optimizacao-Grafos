@@ -134,7 +134,7 @@ void TrepaColinas::run()
 	//cout << "\nConjunto Maximo de Vertices Independentes: ";
 	//escreve_sol(best, vert);
 	//cout << "Custo final: " << best_custo << endl;
-	csvFile->addBestTC(best, best_custo, mbf, kk);
+	csvFile->addBestTC(best, best_custo, (mbf/k), kk);
 	csvFile->toFile(outputFile);
 	time(&end);
 	

@@ -20,7 +20,7 @@ void Hibrido::Run()
 	CSVFile *csvFile = new CSVFile();
 	csvFile->Write(0, 0, outputFile);
 	csvFile->addCabecalhoE();
-	for (k = 0; k < DEFAULT_RUNS; k++)
+	for (k = 0; k < iter; k++)
 	{
 		//cout << "Repeticao: " << k << endl;
 		pop = init_pop(EA_param);
